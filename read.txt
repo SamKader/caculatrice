@@ -1,0 +1,12 @@
+auteur : samandoulgou Hassane
+' OS '
+Name : Kali GNU/Linux
+	VERSION_ID="2024.4"
+	VERSION="2024.4"
+	ID_LIKE=debian
+	Release:2024.4
+
+commande de compilation:
+'gcc -o calculatrice main.c `pkg-config --cflags --libs gtk+-3.0` -lm -rdynamic'
+
+outils: gtk3,glade 3.40.0,codebloks IDE

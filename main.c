@@ -243,8 +243,7 @@ void bouton_egale_clicker(GtkWidget *widget, gpointer data){
     }
 }
 
-
-
+                 // fonction pour calculer le modulo d'un entier et de float
 
 double calcul_modulo(double valeur1, double valeur2) {
     if (valeur2 == 0) {
@@ -282,7 +281,6 @@ int main(int argc, char *argv[]) {
     // initialisation du champ de saisie
     champ_saisie = GTK_WIDGET(gtk_builder_get_object(builder, "champ_saisie"));
     label_resultat = GTK_WIDGET(gtk_builder_get_object(builder, "label_resultat"));
-
 
     // Connecter les signaux définis dans Glade
     gtk_builder_connect_signals(builder, NULL);
