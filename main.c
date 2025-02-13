@@ -1,33 +1,31 @@
 #include <gtk/gtk.h>
 
+#include <math.h> // Pour fmod()
+
+double calcul_modulo(double valeur1, double valeur2); // Déclaration
+
 // Variables globales
 GtkBuilder *builder;
-//double dernier_nombre = 0.0;
-char operation = 0;
-const gchar *donnee;
+
 GtkWidget *champ_saisie,*label_resultat; // Déclaration globale du champ de saisie et label
 
-// Fonction appelée lorsqu'on clique sur "button_plus"
+// Fonction appelée lorsqu'on clique sur un bouton , pour les operateur
+void bouton_plus_clicker(GtkWidget *widget, gpointer data) {
+    GtkEntry *champ= GTK_ENTRY(champ_saisie);
+    const char *texte_courant = gtk_entry_get_text(GTK_ENTRY(champ));
 
+    // Ajouter le "+" au texte actuel au lieu de vider le champ
+    char texte_nouveau[50];
+    snprintf(texte_nouveau, sizeof(texte_nouveau), "%s + ", texte_courant);
 
-void bouton_c_clicker(GtkWidget *widget, gpointer data){
-    g_print("bouton clear cliquer\n");
-    GtkEntry *entrer = GTK_ENTRY(champ_saisie);
-    donnee="";
-    gtk_entry_set_text(entrer, ""); // Met un texte vide dans l'entrée
+    gtk_entry_set_text(GTK_ENTRY(champ_saisie), texte_nouveau); // Mettre à jour l'affichage
 }
-
-
 void bouton_div_clicker(GtkWidget *widget, gpointer data){
     g_print("bouton division cliquer\n");
     GtkEntry *champ= GTK_ENTRY(champ_saisie);
     const char *texte_courant = gtk_entry_get_text(GTK_ENTRY(champ));
 
-    //g_print("texte courant: %s\n", texte_courant); // Afficher le texte avant conversion
-    //dernier_nombre = atof(texte_courant);  // Convertir en nombre
-    //g_print("dernier nombre : %f\n", dernier_nombre); // Afficher le nombre
-
-    operation = '+';  // Sauvegarder l'opération
+    //operation = '/';  // Sauvegarder l'opération
 
     // Ajouter le "+" au texte actuel au lieu de vider le champ
     char texte_nouveau[50] ;
@@ -35,18 +33,68 @@ void bouton_div_clicker(GtkWidget *widget, gpointer data){
 
     gtk_entry_set_text(GTK_ENTRY(champ_saisie), texte_nouveau); // Mettre à jour l'affichage
 }
+void bouton_modulo_clicker(GtkWidget *widget, gpointer data) {
+    g_print("bouton modulo cliqué\n");
+
+    // Récupérer le champ d'entrée (champ_saisie doit être accessible ici)
+    GtkEntry *champ = GTK_ENTRY(champ_saisie);
+    const char *texte_courant = gtk_entry_get_text(champ);
+
+    // Ajouter le "%" au texte actuel sans vider le champ
+    char texte_nouveau[20];
+    snprintf(texte_nouveau, sizeof(texte_nouveau), "%s %%", texte_courant);
+
+    // Mettre à jour l'affichage avec le nouveau texte
+    gtk_entry_set_text(champ, texte_nouveau);
+}
+
+void bouton_moins_clicker(GtkWidget *widget, gpointer data){
+    g_print("bouton moins cliquer\n");
+    GtkEntry *champ= GTK_ENTRY(champ_saisie);
+    const char *texte_courant = gtk_entry_get_text(GTK_ENTRY(champ));
+
+    //operation = '+';  // Sauvegarder l'opération
+
+    // Ajouter le "+" au texte actuel au lieu de vider le champ
+    char texte_nouveau[50];
+    snprintf(texte_nouveau, sizeof(texte_nouveau), "%s - ", texte_courant);
+
+    gtk_entry_set_text(GTK_ENTRY(champ_saisie), texte_nouveau); // Mettre à jour l'affichage
+
+}
+
 void bouton_mult_clicker(GtkWidget *widget, gpointer data){
     g_print("bouton multiplication cliquer\n");
     GtkEntry *champ= GTK_ENTRY(champ_saisie);
     const char *texte_courant = gtk_entry_get_text(GTK_ENTRY(champ));
 
-    operation = '+';  // Sauvegarder l'opération
+    //operation = '*';  // Sauvegarder l'opération
 
     // Ajouter le "+" au texte actuel au lieu de vider le champ
     char texte_nouveau[50];
     snprintf(texte_nouveau, sizeof(texte_nouveau), "%s * ", texte_courant);
 
     gtk_entry_set_text(GTK_ENTRY(champ_saisie), texte_nouveau); // Mettre à jour l'affichage
+}
+        // les fonction afficher des synbole
+void bouton_virgule_clicker(GtkWidget *widget, gpointer data){
+    g_print("bouton virgule cliquer\n");
+    GtkEntry *champ= GTK_ENTRY(champ_saisie);
+    const char *texte_courant = gtk_entry_get_text(GTK_ENTRY(champ));
+
+    char texte_nouveau[50];
+    snprintf(texte_nouveau, sizeof(texte_nouveau), "%s . ", texte_courant);
+
+    gtk_entry_set_text(GTK_ENTRY(champ_saisie), texte_nouveau); // Mettre à jour l'affichage
+}
+
+    // les fonctions pour effacer dans le champ d'ecriture
+
+void bouton_c_clicker(GtkWidget *widget, gpointer data){
+    g_print("bouton clear cliquer\n");
+    GtkEntry *entrer = GTK_ENTRY(champ_saisie);
+    //donnee="";
+    gtk_entry_set_text(entrer, ""); // Met un texte vide dans l'entrée
 }
 void bouton_effacer_clicker(GtkWidget *widget, gpointer data){
     g_print("bouton effacer cliquer\n");
@@ -59,69 +107,58 @@ void bouton_effacer_clicker(GtkWidget *widget, gpointer data){
         char nouveau_texte[longueur];
         strncpy(nouveau_texte, texte, longueur - 1);
         nouveau_texte[longueur - 1] = '\0';
-        donnee=nouveau_texte;
+       // donnee=nouveau_texte;
 
 
-        gtk_entry_set_text(entrer, donnee); // Mettre à jour l'entrée avec le nouveau texte
+        gtk_entry_set_text(entrer, nouveau_texte); // Mettre à jour l'entrée avec le nouveau texte
     }
 }
 
+
+         // les fonctions pour afficher des chiffre dans le champd'ecriture
 
 void bouton7_clicker(GtkWidget *widget, gpointer data){
     g_print("bouton 7 cliquer\n");
     GtkEntry *entrer=GTK_ENTRY(champ_saisie);
     const char *text =gtk_entry_get_text(entrer);
-    donnee=text;
-    gtk_entry_set_text(entrer,g_strdup_printf(("%s7"),donnee));
+   // donnee=text;
+    gtk_entry_set_text(entrer,g_strdup_printf(("%s7"),text));
 }
 void bouton8_clicker(GtkWidget *widget, gpointer data){
     g_print("bouton 8 cliquer\n");
     GtkEntry *entrer=GTK_ENTRY(champ_saisie);
     const char *text=gtk_entry_get_text(entrer);
-    donnee=text;
-    gtk_entry_set_text(entrer,g_strdup_printf(("%s8"),donnee));
+    //donnee=text;
+    gtk_entry_set_text(entrer,g_strdup_printf(("%s8"),text));
 }
 void bouton9_clicker(GtkWidget *widget, gpointer data){
     g_print("bouton 9 cliquer\n");
     GtkEntry *entrer=GTK_ENTRY(champ_saisie);
     const char *text=gtk_entry_get_text(entrer);
-    donnee=text;
-    gtk_entry_set_text(entrer,g_strdup_printf(("%s9"),donnee));
+    //donnee=text;
+    gtk_entry_set_text(entrer,g_strdup_printf(("%s9"),text));
 }
-void bouton_moins_clicker(GtkWidget *widget, gpointer data){
-    g_print("bouton moins cliquer\n");
-    GtkEntry *champ= GTK_ENTRY(champ_saisie);
-    const char *texte_courant = gtk_entry_get_text(GTK_ENTRY(champ));
 
-    operation = '+';  // Sauvegarder l'opération
-
-    // Ajouter le "+" au texte actuel au lieu de vider le champ
-    char texte_nouveau[50];
-    snprintf(texte_nouveau, sizeof(texte_nouveau), "%s - ", texte_courant);
-
-    gtk_entry_set_text(GTK_ENTRY(champ_saisie), texte_nouveau); // Mettre à jour l'affichage
-
-}
 void bouton4_clicker(GtkWidget *widget, gpointer data){
     g_print("bouton 4 cliquer\n");
     GtkEntry *champ = GTK_ENTRY(champ_saisie);
     const char *text=gtk_entry_get_text(champ);
-    donnee=text;
-    gtk_entry_set_text(champ,g_strdup_printf("%s4",donnee));
+    //donnee=text;
+    gtk_entry_set_text(champ,g_strdup_printf("%s4",text));
 }
 void bouton5_clicker(GtkWidget *widget, gpointer data){
     g_print("bouton 5 cliquer\n");
     GtkEntry *entrer=GTK_ENTRY(champ_saisie);
     const char *text=gtk_entry_get_text(entrer);
-    donnee=text;
-    gtk_entry_set_text(entrer,g_strdup_printf("%s5",donnee));
+    //donnee=text;
+    gtk_entry_set_text(entrer,g_strdup_printf("%s5",text));
 }
 void bouton6_clicker(GtkWidget *widget, gpointer data){
     g_print("bouton 6 cliquer\n");
     GtkEntry *entrer=GTK_ENTRY(champ_saisie);
     const char *text=gtk_entry_get_text(entrer);
-    donnee=text;
-    gtk_entry_set_text(entrer,g_strdup_printf(("%s6"),donnee));
+    //donnee=text;
+    gtk_entry_set_text(entrer,g_strdup_printf(("%s6"),text));
 }
 
 void bouton1_clicker(GtkWidget *widget, gpointer data){
@@ -130,16 +167,16 @@ void bouton1_clicker(GtkWidget *widget, gpointer data){
     GtkEntry *n=GTK_ENTRY(champ_saisie);
     const char *text=gtk_entry_get_text(n);
     //affichage
-    donnee=text;
-    gtk_entry_set_text(n,g_strdup_printf("%s1",donnee));
+    //donnee=text;
+    gtk_entry_set_text(n,g_strdup_printf("%s1",text));
 }
 void bouton2_clicker(GtkWidget *widget, gpointer data){
     g_print("bouton 2 cliquer\n");
     // convertion
     GtkEntry *entrer=GTK_ENTRY(champ_saisie);
     const char *text=gtk_entry_get_text(entrer);
-    donnee=text;
-    gtk_entry_set_text(entrer,g_strdup_printf("%s2",donnee));
+    //donnee=text;
+    gtk_entry_set_text(entrer,g_strdup_printf("%s2",text));
 }
 void bouton3_clicker(GtkWidget *widget, gpointer data){
     g_print("bouton 3 cliquer\n");
@@ -150,11 +187,20 @@ void bouton3_clicker(GtkWidget *widget, gpointer data){
     // Récupérer le texte actuel du champ de saisie
     const char *texte_actuel = gtk_entry_get_text(entry);
     // stocker dans la variable global donnee
-    donnee=texte_actuel;
+    //donnee=texte_actuel;
 
     // Mettre à jour le texte du champ de saisie en ajoutant "0" à la fin
-    gtk_entry_set_text(entry, g_strdup_printf("%s3", donnee));
+    gtk_entry_set_text(entry, g_strdup_printf("%s3", texte_actuel));
 }
+void bouton0_clicker(GtkWidget *widget, gpointer data){
+    g_print("bouton 0 cliquer\n");
+    GtkEntry *entrer=GTK_ENTRY(champ_saisie);
+    const char *text=gtk_entry_get_text(entrer);
+    gtk_entry_set_text(entrer,g_strdup_printf(("%s0"),text));
+}
+
+       // fonction pour caculer et affiche dans le champ
+
 void bouton_egale_clicker(GtkWidget *widget, gpointer data){
     g_print("bouton egale cliquer\n");
     // Récupérer les widgets passés en paramètre
@@ -165,18 +211,19 @@ void bouton_egale_clicker(GtkWidget *widget, gpointer data){
     const gchar *saisie = gtk_entry_get_text(entry);
 
     // Variables pour stocker les opérandes et l'opérateur
-    double op1, op2, resultat;
+    double valeur1, valeur2, resultat;
     char operateur;
 
     // Scanner la chaîne pour identifier les nombres et l'opérateur
-    if (sscanf(saisie, "%lf %c %lf", &op1, &operateur, &op2) == 3) {
+    if (sscanf(saisie, "%lf %c %lf", &valeur1, &operateur, &valeur2) == 3) {
         // Effectuer l'opération selon l'opérateur trouvé
         switch (operateur) {
-            case '+': resultat = op1 + op2; break;
-            case '-': resultat = op1 - op2; break;
-            case '*': resultat = op1 * op2; break;
+            case '+': resultat = valeur1 + valeur2; break;
+            case '-': resultat = valeur1 - valeur2; break;
+            case '*': resultat = valeur1 * valeur2; break;
+            case'%' :resultat = calcul_modulo(valeur1,valeur2); break;//calcule du modulo
             case '/':
-                if (op2 != 0) resultat = op1 / op2;
+                if (valeur2 != 0) resultat = valeur1 / valeur2;
                 else {
                     gtk_label_set_text(label, "Erreur!");
                     return;
@@ -188,53 +235,32 @@ void bouton_egale_clicker(GtkWidget *widget, gpointer data){
         }
 
         // Convertir le résultat en texte et l'afficher dans le label
-        char buffer[50];
-        snprintf(buffer, sizeof(buffer), "%.2f", resultat);
-        gtk_label_set_text(label, buffer);
+        char text[50];
+        snprintf(text, sizeof(text), "%.2f", resultat);
+        gtk_label_set_text(label, text);
     } else {
         gtk_label_set_text(label, "Expression invalide !");
     }
 }
-void bouton_modulo_clicker(GtkWidget *widget, gpointer data){
-    g_print("bouton modulo cliquer\n");
-    GtkEntry *champ= GTK_ENTRY(champ_saisie);
-    const char *texte_courant = gtk_entry_get_text(GTK_ENTRY(champ));
 
-    operation = '+';  // Sauvegarder l'opération
 
-    // Ajouter le "+" au texte actuel au lieu de vider le champ
-    char texte_nouveau[20];
-    snprintf(texte_nouveau, sizeof(texte_nouveau), "%s % ", texte_courant);
 
-    gtk_entry_set_text(GTK_ENTRY(champ_saisie), texte_nouveau); // Mettre à jour l'affichage
+
+double calcul_modulo(double valeur1, double valeur2) {
+    if (valeur2 == 0) {
+        //printf("Erreur : division par zéro !\n");
+        return NAN; // Retourne NaN (Not a Number) en cas d'erreur
+    }
+
+    if (valeur1 == (int)valeur1 && valeur2 == (int)valeur2) {   // verifier que les valeur sont des entiers
+        // Si les deux sont des entiers, utiliser %
+        return (int)valeur1 % (int)valeur2;
+    } else {
+        // Sinon, utiliser fmod() pour le modulo flottant
+        return fmod(valeur1, valeur2);
+    }
 }
 
-void bouton0_clicker(GtkWidget *widget, gpointer data){
-    g_print("bouton 0 cliquer\n");
-    GtkEntry *entrer=GTK_ENTRY(champ_saisie);
-    const char *text=gtk_entry_get_text(entrer);
-    gtk_entry_set_text(entrer,g_strdup_printf(("%s0"),text));
-}
-void bouton_virgule_clicker(GtkWidget *widget, gpointer data){
-    g_print("bouton virgule cliquer\n");
-}
-
-void bouton_plus_clicker(GtkWidget *widget, gpointer data) {
-    GtkEntry *champ= GTK_ENTRY(champ_saisie);
-    const char *texte_courant = gtk_entry_get_text(GTK_ENTRY(champ));
-
-    //g_print("texte courant: %s\n", texte_courant); // Afficher le texte avant conversion
-    //dernier_nombre = atof(texte_courant);  // Convertir en nombre
-    //g_print("dernier nombre : %f\n", dernier_nombre); // Afficher le nombre
-
-    operation = '+';  // Sauvegarder l'opération
-
-    // Ajouter le "+" au texte actuel au lieu de vider le champ
-    char texte_nouveau[50];
-    snprintf(texte_nouveau, sizeof(texte_nouveau), "%s + ", texte_courant);
-
-    gtk_entry_set_text(GTK_ENTRY(champ_saisie), texte_nouveau); // Mettre à jour l'affichage
-}
 
 int main(int argc, char *argv[]) {
     gtk_init(&argc, &argv);
