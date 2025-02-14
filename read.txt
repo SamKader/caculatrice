@@ -1,4 +1,4 @@
-auteur : samandoulgou Hassane
+auteur : SAMANDOULGOU Hassane & GANDEMA Abdoul Rachid
 ' OS '
 Name : Kali GNU/Linux
 	VERSION_ID="2024.4"
