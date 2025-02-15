@@ -10,3 +10,7 @@ commande de compilation:
 'gcc -o calculatrice main.c `pkg-config --cflags --libs gtk+-3.0` -lm -rdynamic'
 
 outils: gtk3,glade 3.40.0,codebloks IDE
+
+commande windows: 
+'gcc -D__USE_MINGW_ANSI_STDIO=1 -o calculatrice main.c `pkg-config --cflags --libs gtk+-3.0` -lm -Wl,--export-all-symbols
+'

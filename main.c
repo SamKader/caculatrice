@@ -83,7 +83,7 @@ void bouton_virgule_clicker(GtkWidget *widget, gpointer data){
     const char *texte_courant = gtk_entry_get_text(GTK_ENTRY(champ));
 
     char texte_nouveau[50];
-    snprintf(texte_nouveau, sizeof(texte_nouveau), "%s . ", texte_courant);
+    snprintf(texte_nouveau, sizeof(texte_nouveau), "%s,", texte_courant);
 
     gtk_entry_set_text(GTK_ENTRY(champ_saisie), texte_nouveau); // Mettre à jour l'affichage
 }
@@ -216,6 +216,9 @@ void bouton_egale_clicker(GtkWidget *widget, gpointer data){
 
     // Scanner la chaîne pour identifier les nombres et l'opérateur
     if (sscanf(saisie, "%lf %c %lf", &valeur1, &operateur, &valeur2) == 3) {
+        g_print("\nvaleur1= %lf\n",valeur1);
+        g_print("\nvaleur2= %lf\n",valeur2);
+        g_print("\noperateur= %c\n",operateur);
         // Effectuer l'opération selon l'opérateur trouvé
         switch (operateur) {
             case '+': resultat = valeur1 + valeur2; break;
@@ -232,6 +235,7 @@ void bouton_egale_clicker(GtkWidget *widget, gpointer data){
             default:
                 gtk_label_set_text(label, "Opérateur invalide !");
                 return;
+        g_print("\nresultat= %lf\n",resultat);
         }
 
         // Convertir le résultat en texte et l'afficher dans le label
